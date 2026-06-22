@@ -6,14 +6,14 @@ import {
     getUser, 
     getUsers, 
     updateUser 
-} from "../controllers/users.controllers";
+} from "../controllers/users.controllers.js";
 
 const router = Router();
 
-app.get('/users', getUsers);
-app.get('/users/:id', getUser);
-app.post('/users', createUser);
-app.put('/users/:id', updateUser);
-app.delete('/users/:id', deleteUser)
+router.get('/users', getUsers);
+router.get('/users/:id', getUser);
+router.post('/users', createUser);
+router.put('/users/:id', updateUser);
+router.delete('/users/:id', deleteUser)
 
 export default router;
