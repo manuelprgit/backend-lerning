@@ -43,10 +43,23 @@ export const putUser = async (id, name) => {
 }
 
 export const delUser = async (id) => {
-    if (isNaN(id)) return null;
     const result = await new sql.Request()
         .input('id', sql.Int, id)
         .query('DELETE FROM Users WHERE id = @id');
     if (result.rowsAffected[0] === 0) return null;
     return true;
+}
+
+export const getUsersByRange = async (sinceId, fromId) => {
+
+    const result = await new sql.Request()
+        .input('sinceId', sql.Int, sinceId)
+        .input('fromId', sql.Int, fromId)
+        .query('select * from Users where id between @sinceId and @fromId');
+
+    const users = result.recordset;
+
+    if (!users) return null;
+    return users;
+
 }

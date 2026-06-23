@@ -2,6 +2,7 @@ import {
     delUser,
     getAllUsers,
     getUserById,
+    getUsersByRange,
     postUser,
     putUser
 } from "../services/users.services.js";
@@ -19,8 +20,7 @@ export const getUsers = async (req, res) => {
 
 export const getUser = async (req, res) => {
     try {
-        const id = Number(req.params.id);
-        const user = await getUserById(id);
+        const user = await getUserById(req.validatedId);
 
         if (!user) {
             return res.status(404).json({
@@ -61,8 +61,7 @@ export const createUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
-        const userId = Number(req.params.id);
-        const userObtainer = await getUserById(userId);
+        const userObtainer = await getUserById(req.validatedId);
 
         if (!userObtainer) {
             return res.status(400).json({
@@ -79,13 +78,14 @@ export const updateUser = async (req, res) => {
 
         }
 
-        const user = await putUser(userId, name);
+        const user = await putUser(req.validatedId, name);
 
         return res.status(200).json({
             'message': 'Usuario modificado correctamente',
             'res': user
         })
     } catch (error) {
+        console.log(error);
         return res.status(500).json({
             message: 'Error al actualizar el usuario'
         });
@@ -94,8 +94,7 @@ export const updateUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     try {
-        const userId = Number(req.params.id);
-        const wasDeleted = await delUser(userId);
+        const wasDeleted = await delUser(req.validatedId);
 
         if (!wasDeleted) {
             return res.status(404).json({
@@ -111,4 +110,26 @@ export const deleteUser = async (req, res) => {
             message: 'Error al eliminar el usuario'
         });
     }
+}
+
+export const getUserByIdRange = async (req, res) => {
+
+    const { sinceId, fromId } = req.params;
+
+    if (isNaN(sinceId) || isNaN(fromId)) {
+        return res.status(400).json({
+            message: 'ID inválido'
+        });
+    }
+
+    const users = await getUsersByRange(sinceId, fromId);
+
+    if (!users) res.status(404).json({
+        message: 'No se encontró ningún usuario con ese ID'
+    })
+
+    res.json({
+        users
+    })
+
 }
