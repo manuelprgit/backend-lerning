@@ -124,11 +124,13 @@ export const getUserByIdRange = async (req, res) => {
 
     const users = await getUsersByRange(sinceId, fromId);
 
-    if (!users) res.status(404).json({
-        message: 'No se encontró ningún usuario con ese ID'
-    })
+    if (!users) {
+        return res.status(404).json({
+            message: 'No se encontró ningún usuario con ese ID'
+        })
+    }
 
-    res.json({
+    return res.status(200).json({
         users
     })
 
