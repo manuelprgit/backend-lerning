@@ -13,4 +13,4 @@ app.use(router);
 
 app.listen(port, () => {
     console.log(`listening in http://localhost:${port}`);
-})
+});

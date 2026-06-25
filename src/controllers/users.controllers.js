@@ -122,6 +122,12 @@ export const getUserByIdRange = async (req, res) => {
         });
     }
 
+    if (sinceId > fromId){
+        return res.status(400).json({
+            message: 'El id inicial puede ser mayor al final'
+        });
+    }
+
     const users = await getUsersByRange(sinceId, fromId);
 
     if (!users) {
